@@ -1,0 +1,33 @@
+version: '3.7'
+
+services:
+  api:
+    environment:
+      SQL_USER: root
+      PORT: 8080
+      SQL_PASS: password
+      SQL_PORT: 3306
+      SQL_DB: db
+      SQL_HOST: db
+      SQL_MIGS: /app/migrations
+    build:
+      context: .
+    entrypoint: ["/app/wait-for-it.sh", "db:3306", "-t", "120", "--", "/app/app"]      
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+  db:
+    platform: linux/x86_64
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: 'db'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - '3306:3306'
+    expose:    
+      - '3306'
