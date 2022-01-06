@@ -12,8 +12,9 @@ WORKDIR /go/src/github.com/eahrend/go-gin-crud
 COPY go.mod ./
 RUN go mod download
 COPY . .
-RUN CGO_ENABLED=0 go build \
+RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build \
     -installsuffix 'static' \
+    -ldflags="-w -s" \
     -o /app .
 
 # Application layer
